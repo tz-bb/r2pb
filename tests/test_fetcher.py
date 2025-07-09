@@ -22,17 +22,17 @@ def mock_git_repo(monkeypatch):
             (repo_dir / "sensor_msgs").mkdir()
         elif repo_name == "std_msgs":
             (repo_dir / "std_msgs").mkdir()
-        
+
         # clone_from 应该返回一个 Repo 实例
         return mock_repo_instance
 
     # 1. 使用 monkeypatch 替换真实的的 Repo 类为一个 Mock 类
     monkeypatch.setattr("r2pb.fetcher.Repo", mock_repo_class)
-    
+
     # 2. 配置 Mock 类的 clone_from 方法的行为
     #    它现在是一个具有 side_effect 的 MagicMock，可以被断言
     mock_repo_class.clone_from.side_effect = mock_clone_from_side_effect
-    
+
     return mock_repo_class, mock_repo_instance
 
 
@@ -59,7 +59,7 @@ def test_fetch_package_update(fetcher, mock_git_repo, tmp_path):
     mock_repo_class, mock_repo_instance = mock_git_repo
     repo_url = ROS_MSG_REPOS["std_msgs"]
     repo_path = tmp_path / "std_msgs"
-    
+
     # 预先创建目录，模拟仓库已存在
     (repo_path / "std_msgs").mkdir(parents=True)
 
@@ -94,5 +94,7 @@ def test_find_and_fetch_package_not_found(fetcher, mock_git_repo):
 def test_fetch_package_not_in_repo(fetcher, mock_git_repo):
     """测试当仓库中不包含请求的包时，是否抛出 FileNotFoundError。"""
     repo_url = ROS_MSG_REPOS["std_msgs"]
-    with pytest.raises(FileNotFoundError, match="'wrong_pkg' not found in repository 'std_msgs'"):
+    with pytest.raises(
+        FileNotFoundError, match="'wrong_pkg' not found in repository 'std_msgs'"
+    ):
         fetcher.fetch_package("wrong_pkg", repo_url)

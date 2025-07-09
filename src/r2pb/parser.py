@@ -9,35 +9,38 @@ class Field(NamedTuple):
     field_type: str
     name: str
 
+
 class Constant(NamedTuple):
     const_type: str
     name: str
     value: Any
 
+
 class ParsedMsg(NamedTuple):
     fields: List[Field]
     constants: List[Constant]
+
 
 def parse_msg_content(content: str) -> ParsedMsg:
     """Parses the content of a .msg file into a structured format."""
     fields = []
     constants = []
 
-    lines = content.split('\n')
+    lines = content.split("\n")
 
     for line in lines:
         line = line.strip()
         # Ignore comments and empty lines
-        if not line or line.startswith('#'):
+        if not line or line.startswith("#"):
             continue
 
         # Split comments from the definition
-        if '#' in line:
-            line = line.split('#', 1)[0].strip()
+        if "#" in line:
+            line = line.split("#", 1)[0].strip()
 
         # Check for constants
-        if '=' in line:
-            parts = [p.strip() for p in line.split('=', 1)]
+        if "=" in line:
+            parts = [p.strip() for p in line.split("=", 1)]
             const_def, const_val = parts
             const_type, const_name = const_def.split()
             constants.append(Constant(const_type, const_name, const_val))
@@ -55,7 +58,9 @@ class MsgParser:
     """ROS 消息文件解析器，支持本地搜索和在线获取。"""
 
     def __init__(self, local_package_paths: Optional[List[Union[str, Path]]] = None):
-        self.local_package_paths = [Path(p) for p in local_package_paths] if local_package_paths else []
+        self.local_package_paths = (
+            [Path(p) for p in local_package_paths] if local_package_paths else []
+        )
         self.fetcher = RosMsgFetcher()
 
     def find_msg_file_content(self, package_name: str, msg_name: str) -> str:
@@ -81,7 +86,7 @@ class MsgParser:
             package_path = self.fetcher.find_and_fetch(package_name)
             msg_file_path = self._find_msg_in_package(package_path, msg_name)
             if msg_file_path:
-                return msg_file_path.read_text(encoding='utf-8')
+                return msg_file_path.read_text(encoding="utf-8")
         except (KeyError, FileNotFoundError):
             # 捕获 fetcher 找不到包或文件找不到的异常，统一处理
             pass
@@ -91,27 +96,29 @@ class MsgParser:
             f"(searched in {self.local_package_paths} and online)"
         )
 
-    def _find_local_msg_content(self, package_name: str, msg_name: str) -> Optional[str]:
+    def _find_local_msg_content(
+        self, package_name: str, msg_name: str
+    ) -> Optional[str]:
         """在配置的本地路径中查找消息文件并返回其内容。"""
         for base_path in self.local_package_paths:
             # 假设的目录结构: base_path / package_name / msg / msg_name.msg
-            msg_file = base_path / package_name / 'msg' / f'{msg_name}.msg'
+            msg_file = base_path / package_name / "msg" / f"{msg_name}.msg"
             if msg_file.is_file():
-                return msg_file.read_text(encoding='utf-8')
+                return msg_file.read_text(encoding="utf-8")
         return None
 
     def _find_msg_in_package(self, package_path: Path, msg_name: str) -> Optional[Path]:
         """在给定的包路径下查找 .msg 文件。"""
         # ROS 标准结构是在包目录下的 'msg' 子目录中
-        msg_file = package_path / 'msg' / f'{msg_name}.msg'
+        msg_file = package_path / "msg" / f"{msg_name}.msg"
         if msg_file.is_file():
             return msg_file
-        
+
         # 有些包可能直接把 .msg 文件放在根目录
-        msg_file_root = package_path / f'{msg_name}.msg'
+        msg_file_root = package_path / f"{msg_name}.msg"
         if msg_file_root.is_file():
             return msg_file_root
-            
+
         return None
 
     def parse(self, package_name: str, msg_name: str) -> ParsedMsg:

@@ -4,27 +4,30 @@ import traceback
 from .converter import Converter
 from git import GitCommandError
 
+
 def main():
     """Main function for the r2pb command-line interface."""
     parser = argparse.ArgumentParser(
-        description='r2pb: ROS .msg to Protobuf .proto converter.'
+        description="r2pb: ROS .msg to Protobuf .proto converter."
     )
     parser.add_argument(
-        'msg_type',
+        "msg_type",
         type=str,
-        help='The ROS message type to convert (e.g., std_msgs/String).'
+        help="The ROS message type to convert (e.g., std_msgs/String).",
     )
     parser.add_argument(
-        '-o', '--output-dir',
+        "-o",
+        "--output-dir",
         type=str,
-        default='.',
-        help='The directory where the .proto files will be saved.'
+        default=".",
+        help="The directory where the .proto files will be saved.",
     )
     parser.add_argument(
-        '-d', '--ros-distro',
+        "-d",
+        "--ros-distro",
         type=str,
-        default='noetic',
-        help='The ROS distribution to use (e.g., noetic, melodic).'
+        default="noetic",
+        help="The ROS distribution to use (e.g., noetic, melodic).",
     )
 
     args = parser.parse_args()
@@ -38,7 +41,10 @@ def main():
         print("\nConversion finished successfully.")
     except GitCommandError as e:
         print(f"\nGit command failed: {e}", file=sys.stderr)
-        print("Please ensure that Git is installed and accessible in your system's PATH.", file=sys.stderr)
+        print(
+            "Please ensure that Git is installed and accessible in your system's PATH.",
+            file=sys.stderr,
+        )
         print("Conversion failed.", file=sys.stderr)
         sys.exit(1)
     except Exception:
@@ -47,5 +53,6 @@ def main():
         print("Conversion failed.", file=sys.stderr)
         sys.exit(1)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()

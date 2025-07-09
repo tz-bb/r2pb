@@ -11,12 +11,13 @@ ROS_MSG_REPOS = {
     # ... 可以根据需要添加更多仓库
 }
 
+
 class RosMsgFetcher:
     """从远程 Git 仓库获取并缓存 ROS 消息包。"""
 
     def __init__(self, cache_dir: Path = None):
         if cache_dir is None:
-            self.cache_dir = Path.home() / '.cache' / 'r2pb'
+            self.cache_dir = Path.home() / ".cache" / "r2pb"
         else:
             self.cache_dir = cache_dir
         self.cache_dir.mkdir(parents=True, exist_ok=True)
@@ -52,10 +53,12 @@ class RosMsgFetcher:
         package_path = repo_path / package_name
         if not package_path.is_dir():
             # If the subdirectory doesn't exist, maybe the repo itself is the package.
-            if (repo_path / 'package.xml').exists() or (repo_path / 'msg').is_dir():
+            if (repo_path / "package.xml").exists() or (repo_path / "msg").is_dir():
                 return repo_path
             else:
-                raise FileNotFoundError(f"Package '{package_name}' not found in repository '{repo_name}'.")
+                raise FileNotFoundError(
+                    f"Package '{package_name}' not found in repository '{repo_name}'."
+                )
 
         return package_path
 
@@ -77,13 +80,13 @@ class RosMsgFetcher:
         if package_name in ROS_MSG_REPOS:
             repo_url = ROS_MSG_REPOS[package_name]
             return self.fetch_package(package_name, repo_url)
-        
+
         # 尝试在 common_msgs 中查找
         common_msgs_url = ROS_MSG_REPOS.get("common_msgs")
         if common_msgs_url:
             try:
                 return self.fetch_package(package_name, common_msgs_url)
             except FileNotFoundError:
-                pass # 在 common_msgs 中没找到，继续
+                pass  # 在 common_msgs 中没找到，继续
 
         raise KeyError(f"Package '{package_name}' not found in any known repository.")
