@@ -1,6 +1,6 @@
 from pathlib import Path
 from typing import List, Dict, Any
-from jinja2 import Environment, FileSystemLoader
+from jinja2 import Environment, PackageLoader, select_autoescape
 from .parser import ParsedMsg, Field, Constant, MsgParser # 引入 MsgParser
 from .mapper import map_ros_to_proto_type
 
@@ -16,11 +16,9 @@ class ProtoField:
 class ProtoGenerator:
     """Generates .proto files from ROS message definitions."""
     def __init__(self):
-        templates_dir = Path(__file__).parent / 'templates'
         self.env = Environment(
-            loader=FileSystemLoader(str(templates_dir)),
-            trim_blocks=True,
-            lstrip_blocks=True,
+            loader=PackageLoader('r2pb', 'templates'),
+            autoescape=select_autoescape()
         )
         self.template = self.env.get_template('msg.proto.j2')
 

@@ -1,10 +1,10 @@
 [build-system]
 requires = ["setuptools>=61.0"]
-bild-backend = "setuptools.build_meta"
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "r2pb"
-version = "0.0.1"
+version = "0.1.0"
 authors = [
     { name="Mark", email="hzypp1995@gmail.com" },
 ]
@@ -13,12 +13,15 @@ readme = "README.md"
 requires-python = ">=3.8"
 classifiers = [
     "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
+    "License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)",
     "Operating System :: OS Independent",
 ]
 dependencies = [
     "jinja2",
     "requests",
+    "rosdistro",
+    "pyyaml",
+    "GitPython"
 ]
 
 [project.urls]
@@ -34,3 +37,6 @@ dev = [
     "black",
     "ruff",
 ]
+
+[tool.setuptools.package-data]
+r2pb = ["templates/*.j2"]

@@ -1,6 +1,8 @@
 import argparse
 import sys
+import traceback
 from .converter import Converter
+from git import GitCommandError
 
 def main():
     """Main function for the r2pb command-line interface."""
@@ -34,8 +36,14 @@ def main():
         converter = Converter(ros_distro=args.ros_distro)
         converter.convert(args.msg_type, args.output_dir)
         print("\nConversion finished successfully.")
-    except Exception as e:
-        print(f"\nAn error occurred during conversion: {e}", file=sys.stderr)
+    except GitCommandError as e:
+        print(f"\nGit command failed: {e}", file=sys.stderr)
+        print("Please ensure that Git is installed and accessible in your system's PATH.", file=sys.stderr)
+        print("Conversion failed.", file=sys.stderr)
+        sys.exit(1)
+    except Exception:
+        print(f"\nAn unexpected error occurred during conversion:", file=sys.stderr)
+        traceback.print_exc()
         print("Conversion failed.", file=sys.stderr)
         sys.exit(1)
 
