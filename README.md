@@ -41,13 +41,13 @@ r2pb <package_name/message_name> [options]
    r2pb std_msgs/String -o generated_protos
    ```
    执行后， generated_protos/std_msgs/ 目录下会生成 String.proto 文件。
-2. 转换整个包 (功能待定)
+2.  **[TODO]** 转换整个包
    
    未来版本将支持转换一个包中的所有消息。
 选项:
 
 - -o, --output-dir <directory> : 指定存放生成文件的输出目录。默认为当前目录下的 generated_protos 。
-- --ros-distro <distro> : 指定 ROS 发行版（如 noetic , humble ），用于查找正确的包版本。默认为 noetic 。
+- --ros-distro <distro> : **[TODO]**指定 ROS 发行版（如 noetic , humble ），用于查找正确的包版本。默认为 noetic 。
 ### Python API
 你也可以在 Python 代码中使用 r2pb 的 Converter 类来实现更复杂的逻辑。
 
