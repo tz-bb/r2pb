@@ -20,7 +20,7 @@ pip install r2pb
 或者，如果你想从源码安装并进行开发：
 
 ```
-git clone https://github.com/your-username/r2pb.git
+git clone https://github.com/tz-bb/r2pb.git
 cd r2pb
 pip install -e .
 ```
