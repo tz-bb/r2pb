@@ -6,8 +6,6 @@
 [![PyPI - License](https://img.shields.io/pypi/l/r2pb.svg)](https://github.com/tz-bb/r2pb/blob/main/LICENSE)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-...
-
 # r2pb - ROS .msg to Protobuf .proto Converter
 
 `r2pb` 是一个功能强大且易于使用的命令行工具和 Python 库，用于将 ROS (Robot Operating System) 的 `.msg` 文件转换为 Google 的 Protobuf (`.proto`) 文件。它支持从本地文件系统或远程 Git 仓库（如 GitHub）自动获取 ROS 包。
